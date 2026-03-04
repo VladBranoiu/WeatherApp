@@ -17,10 +17,16 @@ public static class ServiceExtension
         {
             var options = serviceProvider.GetRequiredService<Microsoft.Extensions.Options.IOptions<WeatherApiOptions>>().Value;
 
-            // If BaseUrl is not set, fallback to official base.
-            var baseUrl = string.IsNullOrWhiteSpace(options.BaseUrl)
-                ? "https://api.weatherapi.com/v1/"
-                : options.BaseUrl;
+            var baseUrlRaw = options.BaseUrl ?? string.Empty;
+            var baseUrl = baseUrlRaw.Trim().Trim('"'); // scoate whitespace + ghilimele
+
+            if (!Uri.TryCreate(baseUrl, UriKind.Absolute, out var baseUri))
+            {
+                // fallback safe
+                baseUri = new Uri("https://api.weatherapi.com/v1/", UriKind.Absolute);
+            }
+
+            httpClient.BaseAddress = baseUri;
 
             httpClient.BaseAddress = new Uri(baseUrl, UriKind.Absolute);
         });

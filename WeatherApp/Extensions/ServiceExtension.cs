@@ -18,11 +18,10 @@ public static class ServiceExtension
             var options = serviceProvider.GetRequiredService<Microsoft.Extensions.Options.IOptions<WeatherApiOptions>>().Value;
 
             var baseUrlRaw = options.BaseUrl ?? string.Empty;
-            var baseUrl = baseUrlRaw.Trim().Trim('"'); // scoate whitespace + ghilimele
+            var baseUrl = baseUrlRaw.Trim().Trim('"'); 
 
             if (!Uri.TryCreate(baseUrl, UriKind.Absolute, out var baseUri))
             {
-                // fallback safe
                 baseUri = new Uri("https://api.weatherapi.com/v1/", UriKind.Absolute);
             }
 

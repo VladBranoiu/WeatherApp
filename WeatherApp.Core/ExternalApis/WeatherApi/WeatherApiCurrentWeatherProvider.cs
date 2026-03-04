@@ -2,6 +2,7 @@
 using System.Net;
 using System.Net.Http.Json;
 using WeatherApp.Core.Dtos.Response;
+using WeatherApp.Core.Helpers;
 using WeatherApp.Core.Interfaces;
 using WeatherApp.Core.Options;
 using WeatherApp.Domain.ValueObjects;
@@ -32,6 +33,8 @@ public sealed class WeatherApiCurrentWeatherProvider : ICurrentWeatherProvider
         var queryText = (locationQuery.QueryText ?? string.Empty).Trim();
         if (queryText.Length < 2)
             throw new ArgumentException("Location query is too short.", nameof(locationQuery));
+
+        queryText = queryText.RemoveDiacritics();
 
         var airQualityFlag = _options.IncludeAirQuality ? "yes" : "no";
 

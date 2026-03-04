@@ -19,7 +19,7 @@ public sealed class WeatherApiCurrentWeatherProvider : ICurrentWeatherProvider
         _options = options.Value;
 
         if (string.IsNullOrWhiteSpace(_options.ApiKey))
-            throw new InvalidOperationException("Missing WeatherApi:ApiKey configuration (user-secrets).");
+            throw new InvalidOperationException("Missing WeatherApi:ApiKey configuration.");
     }
 
     public async Task<CurrentWeather> GetCurrentWeatherAsync(

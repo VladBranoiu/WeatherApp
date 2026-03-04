@@ -1,0 +1,101 @@
+﻿@page "/"
+@page "/weather"
+@rendermode InteractiveServer
+
+@using WeatherApp.Domain.ValueObjects
+@inject WeatherApp.Core.Services.GetCurrentWeatherService getCurrentWeatherService
+
+<h1 class="page-title">Weather</h1>
+
+<EditForm Model="formModel" OnSubmit="LoadCurrentWeatherAsync">
+    <div class="search-row">
+        <div class="field">
+            <label for="locationInput">Location</label>
+            <input id="locationInput"
+                   class="input"
+                   @bind="formModel.LocationQueryText"
+                   @bind:event="oninput"
+                   placeholder="e.g., Bucharest"
+                   disabled="@isLoading" />
+        </div>
+
+        <button type="submit" class="btn" disabled="@isLoading">
+            @(isLoading ? "Searching..." : "Search")
+        </button>
+    </div>
+</EditForm>
+
+@if (!string.IsNullOrWhiteSpace(errorMessage))
+{
+    <div class="alert">@errorMessage</div>
+}
+
+@if (currentWeather is not null)
+{
+    <div class="card">
+        <div class="card-header">
+            <div class="location">@currentWeather.LocationName</div>
+            <div class="country">@currentWeather.CountryName</div>
+        </div>
+
+        <div class="card-body">
+            <div class="temp">@currentWeather.TemperatureCelsius.ToString("0.0") °C</div>
+
+            <div class="condition">
+                @if (!string.IsNullOrWhiteSpace(currentWeather.ConditionIconUrl))
+                {
+                    <img class="icon" src="@currentWeather.ConditionIconUrl" alt="Weather icon" />
+                }
+                <span>@currentWeather.ConditionText</span>
+            </div>
+
+            <div class="meta">
+                <span>Humidity: <b>@currentWeather.HumidityPercentage%</b></span>
+                <span>Wind: <b>@currentWeather.WindKph.ToString("0.0") kph</b></span>
+            </div>
+        </div>
+    </div>
+}
+
+@code {
+    private string locationQueryText = "Bucharest";
+    private bool isLoading;
+    private string? errorMessage;
+    private CurrentWeather? currentWeather;
+
+    private WeatherSearchFormModel formModel = new();
+
+    private sealed class WeatherSearchFormModel
+    {
+        public string LocationQueryText { get; set; } = "Bucharest";
+    }
+
+    private async Task LoadCurrentWeatherAsync()
+    {
+        var trimmedQueryText = (formModel.LocationQueryText ?? string.Empty).Trim();
+
+        if (trimmedQueryText.Length < 2)
+        {
+            errorMessage = "Please enter a valid location (at least 2 characters).";
+            currentWeather = null;
+            return;
+        }
+
+        isLoading = true;
+        errorMessage = null;
+
+        try
+        {
+            currentWeather = await getCurrentWeatherService.ExecuteAsync(new LocationQuery(trimmedQueryText));
+        }
+        catch (Exception exception)
+        {
+            errorMessage = exception.Message;
+            currentWeather = null;
+        }
+        finally
+        {
+            isLoading = false;
+        }
+    }
+}

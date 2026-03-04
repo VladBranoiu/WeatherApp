@@ -1,0 +1,5 @@
+<Solution>
+  <Project Path="WeatherApp.Core/WeatherApp.Core.csproj" />
+  <Project Path="WeatherApp.Domain/WeatherApp.Domain.csproj" />
+  <Project Path="WeatherApp/WeatherApp.csproj" />
+</Solution>

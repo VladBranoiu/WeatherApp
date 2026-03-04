@@ -35,8 +35,6 @@ public sealed class WeatherApiCurrentWeatherProvider : ICurrentWeatherProvider
 
         var airQualityFlag = _options.IncludeAirQuality ? "yes" : "no";
 
-        // WeatherAPI current endpoint: /current.json with key, q, aqi
-        // Base URL: https://api.weatherapi.com/v1/  (docs)
         var requestUrl =
             $"current.json?key={Uri.EscapeDataString(_options.ApiKey)}&q={Uri.EscapeDataString(queryText)}&aqi={airQualityFlag}";
 
@@ -62,8 +60,6 @@ public sealed class WeatherApiCurrentWeatherProvider : ICurrentWeatherProvider
         var conditionText = apiResponse.Current.Condition?.Text ?? string.Empty;
         var conditionIcon = apiResponse.Current.Condition?.Icon ?? string.Empty;
 
-        // WeatherAPI icon often comes as a path like "//cdn.weatherapi.com/..."
-        // Normalize to https for UI usage
         var conditionIconUrl = NormalizeIconUrl(conditionIcon);
 
         return new CurrentWeather(
@@ -89,7 +85,6 @@ public sealed class WeatherApiCurrentWeatherProvider : ICurrentWeatherProvider
         if (iconValue.StartsWith("//"))
             return "https:" + iconValue;
 
-        // fallback: treat as relative
         return "https://" + iconValue.TrimStart('/');
     }
 }

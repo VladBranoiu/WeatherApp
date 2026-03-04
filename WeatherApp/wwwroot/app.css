@@ -1,6 +1,9 @@
 html,
 body {
     font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+    min-height: 100%;
+    background: radial-gradient(circle at top, #eef3ff 0%, #f7f9fc 45%, #ffffff 100%);
+    color: #1f2a37;
 }
 
 a,
@@ -68,10 +71,49 @@ h1:focus {
 }
 
 /* Weather page UI */
+.weather-page {
+    padding-bottom: 40px;
+}
+
 .page-title {
     font-size: 34px;
     font-weight: 700;
     margin: 12px 0 18px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.title-icon {
+    width: 40px;
+    height: 40px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 12px;
+    background: rgba(255, 255, 255, 0.7);
+    box-shadow: 0 8px 20px rgba(30, 64, 175, 0.12);
+}
+
+.title-icon svg {
+    width: 26px;
+    height: 26px;
+    fill: none;
+    stroke: #1e2a3a;
+    stroke-width: 1.6;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+}
+
+.page-hero {
+    max-width: 720px;
+    margin-bottom: 18px;
+}
+
+.page-subtitle {
+    margin: 0;
+    color: #516070;
+    font-size: 16px;
 }
 
 .search-row {
@@ -81,6 +123,8 @@ h1:focus {
     align-items: end;
     max-width: 720px;
     margin-bottom: 18px;
+    padding: 16px;
+    border-radius: 16px;
 }
 
 .field label {
@@ -109,7 +153,7 @@ h1:focus {
     padding: 12px 16px;
     border-radius: 10px;
     border: 1px solid #1e2a3a;
-    background: #1e2a3a;
+    background: linear-gradient(135deg, #1e2a3a, #31435d);
     color: #ffffff;
     font-weight: 600;
     cursor: pointer;
